@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Play Store</title>
+  <link rel="stylesheet" href="styles.css" />
+  
+</head>
+<body>
+  <header>
+    <h1>Download Hub</h1>
+    <input type="text" id="search" placeholder="Search apps..." />
+    <div class="user-controls">
+      <span id="user-email"></span>
+      <button onclick="logout()">Logout</button>
+
+    </div>
+  </header>
+  
+  <div class="section-bar">
+    <button class="section-button active" data-category="apps">Apps</button>
+    <button class="section-button" data-category="movies">movies</button>
+    <button class="section-button" data-category="books">Books</button>
+  </div>
+  
+  <main id="app-list" class="fade-in"></main>
+  
+  <script src="appData.js"></script>
+  <script src="auth.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
