@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>App Details</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container" id="app-details"></div>
+
+  <script src="appData.js"></script>
+  <script>
+    const appId = parseInt(new URLSearchParams(window.location.search).get("id"));
+    const app = items.find(item => item.id === appId);
+    const container = document.getElementById("app-details");
+
+    function escapeHTML(str) {
+      return str?.replace(/[&<>"']/g, tag => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'}[tag])) || '';
+    }
+
+    if (app) {
+      const savedReviews = localStorage.getItem(`reviews_${app.id}`);
+      app.reviews = savedReviews ? JSON.parse(savedReviews) : [];
+
+      container.innerHTML = `
+        <h1>${escapeHTML(app.name)}</h1>
+        <img src="${escapeHTML(app.image)}" alt="${escapeHTML(app.name)}" style="max-width:300px;">
+        <p><strong>Category:</strong> ${escapeHTML(app.category)}</p>
+        <p><strong>Rating:</strong> ⭐ ${app.rating}</p>
+        <p>${escapeHTML(app.description || "No description available.")}</p>
+        ${app.downloadUrl ? `<a href="${escapeHTML(app.downloadUrl)}" download><button>⬇️ Download</button></a>` : "<p><em>Download not available.</em></p>"}
+        <h3>User Reviews</h3>
+        <div id="reviews">${app.reviews.length ? app.reviews.map(r => `<p>• ${escapeHTML(r)}</p>`).join('') : "<p>No reviews yet.</p>"}</div>
+        <textarea id="review-input" placeholder="Leave a review..."></textarea>
+        <button onclick="submitReview()">Submit</button>
+      `;
+    } else {
+      container.innerHTML = "<p>App not found.</p>";
+    }
+
+    window.submitReview = function() {
+      const input = document.getElementById("review-input");
+      const reviewText = input.value.trim();
+      if (reviewText) {
+        app.reviews.push(reviewText);
+        localStorage.setItem(`reviews_${app.id}`, JSON.stringify(app.reviews));
+        input.value = "";
+        document.getElementById("reviews").innerHTML = app.reviews.map(r => `<p>• ${escapeHTML(r)}</p>`).join('');
+      }
+    }
+  </script>
+</body>
+</html>
